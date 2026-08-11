@@ -1,0 +1,56 @@
+name: Build Linux Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-linux:
+    name: Linux Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Install Linux desktop dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            clang \
+            cmake \
+            ninja-build \
+            pkg-config \
+            libgtk-3-dev \
+            libstdc++-12-dev
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Show Flutter version
+        run: flutter --version
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Analyze project
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter test
+
+      - name: Build Linux release
+        run: flutter build linux --release
+
+      - name: Create Linux release archive
+        run: |
+          tar -czf TaskBoard-Linux-x64.tar.gz \
+            -C build/linux/x64/release bundle
+
+      - name: Upload Linux release
+        uses: actions/upload-artifact@v7
+        with:
+          name: TaskBoard-Linux-x64
+          path: TaskBoard-Linux-x64.tar.gz
+          retention-days: 30
