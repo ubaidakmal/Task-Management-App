@@ -1,0 +1,50 @@
+name: Build Windows Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-windows:
+    name: Windows Release
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Show Flutter version
+        run: flutter --version
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Analyze project
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter test
+
+      - name: Build Windows release
+        run: flutter build windows --release
+
+      - name: Create Windows release ZIP
+        shell: powershell
+        run: |
+          Compress-Archive `
+            -Path "build\windows\x64\runner\Release\*" `
+            -DestinationPath "TaskBoard-Windows-x64.zip"
+
+      - name: Upload Windows build
+        uses: actions/upload-artifact@v4
+        with:
+          name: TaskBoard-Windows-x64
+          path: TaskBoard-Windows-x64.zip
+          retention-days: 30
