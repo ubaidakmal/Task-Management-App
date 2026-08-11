@@ -122,18 +122,38 @@ class _CompletedTaskCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final accents = theme.extension<AppAccentColors>() ?? AppAccentColors.light;
     final spacing = theme.extension<AppSpacing>() ?? AppSpacing.standard;
     final radii = theme.extension<AppRadii>() ?? AppRadii.standard;
+    final isDark = theme.brightness == Brightness.dark;
+
+    final cardColor = isDark
+        ? Color.alphaBlend(
+            accents.completed.withValues(alpha: 0.1),
+            colorScheme.surfaceContainerHighest,
+          )
+        : accents.completedContainer.withValues(alpha: 0.45);
+
+    final borderColor = accents.completed.withValues(
+      alpha: isDark ? 0.18 : 0.25,
+    );
+
+    final checkBadgeColor = isDark
+        ? Color.alphaBlend(
+            accents.completed.withValues(alpha: 0.16),
+            colorScheme.surfaceContainerHighest,
+          )
+        : accents.completedContainer;
 
     return Padding(
       padding: EdgeInsets.only(bottom: spacing.sm),
       child: Material(
-        color: accents.completedContainer.withValues(alpha: 0.45),
+        color: cardColor,
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(radii.md),
-          side: BorderSide(color: accents.completed.withValues(alpha: 0.25)),
+          side: BorderSide(color: borderColor),
         ),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
@@ -151,7 +171,7 @@ class _CompletedTaskCard extends ConsumerWidget {
                 Padding(
                   padding: EdgeInsets.only(top: spacing.xxs),
                   child: Material(
-                    color: accents.completedContainer,
+                    color: checkBadgeColor,
                     shape: const CircleBorder(),
                     child: InkWell(
                       customBorder: const CircleBorder(),

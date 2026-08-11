@@ -106,7 +106,7 @@ class _TaskFormState extends ConsumerState<TaskForm> {
             controller: _titleController,
             focusNode: _titleFocusNode,
             textInputAction: TextInputAction.next,
-             decoration: const InputDecoration(
+            decoration: const InputDecoration(
               labelText: AppStrings.titleLabel,
               hintText: AppStrings.titleHint,
             ),

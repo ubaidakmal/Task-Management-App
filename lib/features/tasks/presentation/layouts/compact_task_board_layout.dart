@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task_management_app/app/theme/app_colors.dart';
 import 'package:task_management_app/app/theme/app_theme_extensions.dart';
 import 'package:task_management_app/app/widgets/accent_header_band.dart';
-import 'package:task_management_app/app/widgets/brand_logo.dart';
 import 'package:task_management_app/app/widgets/theme_mode_button.dart';
 import 'package:task_management_app/core/constants/app_strings.dart';
 import 'package:task_management_app/features/tasks/presentation/providers/task_stats_provider.dart';
@@ -24,13 +23,7 @@ class CompactTaskBoardLayout extends ConsumerWidget {
       key: TaskBoardKeys.compactLayout,
       appBar: AppBar(
         title: const Text(AppStrings.taskBoardTitle),
-        actions: const [
-          ThemeModeButton(),
-          Padding(
-            padding: EdgeInsets.only(right: 8),
-            child: BrandLogo(size: 32),
-          ),
-        ],
+        actions: const [ThemeModeButton()],
       ),
       floatingActionButton: FloatingActionButton.extended(
         key: TaskBoardKeys.addTaskFab,
@@ -50,6 +43,10 @@ class CompactTaskBoardLayout extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               AccentHeaderBand(
+                padding: EdgeInsets.symmetric(
+                  horizontal: spacing.md,
+                  vertical: spacing.sm + spacing.xxs,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

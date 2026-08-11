@@ -46,64 +46,80 @@ class ExpandedTaskBoardLayout extends ConsumerWidget {
                   ),
                   SizedBox(height: spacing.lg),
                   Expanded(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        SizedBox(
-                          width: _sidebarWidth,
-                          child: Card(
-                            clipBehavior: Clip.antiAlias,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                AccentHeaderBand(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: spacing.md,
-                                    vertical: spacing.sm,
+                    child: LayoutBuilder(
+                      builder: (context, rowConstraints) {
+                        return Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            SizedBox(
+                              width: _sidebarWidth,
+                              child: Align(
+                                alignment: Alignment.topCenter,
+                                child: ConstrainedBox(
+                                  constraints: BoxConstraints(
+                                    maxHeight: rowConstraints.maxHeight,
                                   ),
-                                  child: Text(
-                                    AppStrings.createTask,
-                                    style: theme.textTheme.titleSmall?.copyWith(
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsets.all(spacing.md),
-                                    child: SingleChildScrollView(
+                                  child: SingleChildScrollView(
+                                    child: Card(
+                                      clipBehavior: Clip.antiAlias,
                                       child: Column(
+                                        mainAxisSize: MainAxisSize.min,
                                         crossAxisAlignment:
                                             CrossAxisAlignment.stretch,
                                         children: [
-                                          const TaskForm(showHeader: false),
-                                          SizedBox(height: spacing.lg),
-                                          Divider(
-                                            color: theme
-                                                .colorScheme
-                                                .outlineVariant,
+                                          AccentHeaderBand(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: spacing.md,
+                                              vertical: spacing.sm,
+                                            ),
+                                            child: Text(
+                                              AppStrings.createTask,
+                                              style: theme.textTheme.titleSmall
+                                                  ?.copyWith(
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                            ),
                                           ),
-                                          SizedBox(height: spacing.lg),
-                                          TaskStatsPanel(stats: stats),
+                                          Padding(
+                                            padding: EdgeInsets.all(spacing.md),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.stretch,
+                                              children: [
+                                                const TaskForm(
+                                                  showHeader: false,
+                                                ),
+                                                SizedBox(height: spacing.lg),
+                                                Divider(
+                                                  color: theme
+                                                      .colorScheme
+                                                      .outlineVariant,
+                                                ),
+                                                SizedBox(height: spacing.lg),
+                                                TaskStatsPanel(stats: stats),
+                                              ],
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ),
                                   ),
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ),
-                        SizedBox(width: spacing.lg),
-                        Expanded(
-                          child: Card(
-                            child: Padding(
-                              padding: EdgeInsets.all(spacing.md),
-                              child: const TaskListSection(),
+                            SizedBox(width: spacing.lg),
+                            Expanded(
+                              child: Card(
+                                child: Padding(
+                                  padding: EdgeInsets.all(spacing.md),
+                                  child: const TaskListSection(),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ],
+                          ],
+                        );
+                      },
                     ),
                   ),
                 ],

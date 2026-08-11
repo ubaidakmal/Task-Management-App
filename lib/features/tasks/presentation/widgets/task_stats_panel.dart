@@ -73,27 +73,38 @@ class _StatTile extends StatelessWidget {
     final accents = theme.extension<AppAccentColors>() ?? AppAccentColors.light;
     final spacing = theme.extension<AppSpacing>() ?? AppSpacing.standard;
     final radii = theme.extension<AppRadii>() ?? AppRadii.standard;
+    final isDark = theme.brightness == Brightness.dark;
 
-    final (label, icon, background, foreground) = switch (kind) {
+    final (label, icon, semantic, foreground, lightBackground) = switch (kind) {
       _StatKind.total => (
         AppStrings.statTotal,
         Icons.format_list_bulleted_rounded,
-        colorScheme.primaryContainer,
         colorScheme.primary,
+        colorScheme.primary,
+        colorScheme.primaryContainer,
       ),
       _StatKind.active => (
         AppStrings.statActive,
         Icons.pending_actions_rounded,
-        accents.activeContainer,
         accents.active,
+        accents.active,
+        accents.activeContainer,
       ),
       _StatKind.completed => (
         AppStrings.statCompleted,
         Icons.check_circle_outline_rounded,
-        accents.completedContainer,
         accents.completed,
+        accents.completed,
+        accents.completedContainer,
       ),
     };
+
+    final background = isDark
+        ? Color.alphaBlend(
+            semantic.withValues(alpha: 0.1),
+            colorScheme.surfaceContainerHighest,
+          )
+        : lightBackground;
 
     return Container(
       padding: EdgeInsets.symmetric(
@@ -103,6 +114,9 @@ class _StatTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: background,
         borderRadius: BorderRadius.circular(radii.md),
+        border: isDark
+            ? Border.all(color: semantic.withValues(alpha: 0.18))
+            : null,
       ),
       child: Row(
         children: [
