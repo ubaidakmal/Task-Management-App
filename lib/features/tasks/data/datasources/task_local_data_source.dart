@@ -22,21 +22,39 @@ class TaskLocalDataSource {
       return const [];
     }
 
-    try {
-      final decoded = jsonDecode(jsonString);
-      if (decoded is! List) {
-        return const [];
-      }
+    return _parseStoredTasks(jsonString);
+  }
 
-      return decoded
-          .whereType<Map>()
-          .map((entry) => Task.fromJson(Map<String, dynamic>.from(entry)))
-          .toList(growable: false);
+  /// Parses stored JSON into tasks.
+  ///
+  /// Only decoding and data-shape failures are treated as recoverable corruption.
+  /// SharedPreferences read failures propagate to the caller.
+  List<Task> _parseStoredTasks(String jsonString) {
+    final dynamic decoded;
+    try {
+      decoded = jsonDecode(jsonString);
     } on FormatException {
       return const [];
-    } on TypeError {
+    }
+
+    if (decoded is! List) {
       return const [];
     }
+
+    final tasks = <Task>[];
+    for (final entry in decoded) {
+      if (entry is! Map) {
+        continue;
+      }
+
+      try {
+        tasks.add(Task.fromJson(Map<String, dynamic>.from(entry)));
+      } on TypeError {
+        continue;
+      }
+    }
+
+    return List<Task>.unmodifiable(tasks);
   }
 
   Future<void> writeTasks(List<Task> tasks) async {

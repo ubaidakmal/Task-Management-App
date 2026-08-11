@@ -47,5 +47,14 @@ void main() {
 
       expect(await corruptedSource.readTasks(), isEmpty);
     });
+
+    test('returns empty list when stored JSON is not a list', () async {
+      final preferences = SharedPreferencesAsync();
+      await preferences.setString(TaskStorageKeys.tasks, '{"id":"1"}');
+
+      final corruptedSource = TaskLocalDataSource(preferences: preferences);
+
+      expect(await corruptedSource.readTasks(), isEmpty);
+    });
   });
 }

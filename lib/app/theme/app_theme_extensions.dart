@@ -162,3 +162,88 @@ class AppLayoutConstraints extends ThemeExtension<AppLayoutConstraints> {
     );
   }
 }
+
+/// Semantic accent colors for stats, badges, and subtle UI highlights.
+@immutable
+class AppAccentColors extends ThemeExtension<AppAccentColors> {
+  const AppAccentColors({
+    required this.active,
+    required this.activeContainer,
+    required this.completed,
+    required this.completedContainer,
+    required this.headerGradientStart,
+    required this.headerGradientEnd,
+  });
+
+  final Color active;
+  final Color activeContainer;
+  final Color completed;
+  final Color completedContainer;
+  final Color headerGradientStart;
+  final Color headerGradientEnd;
+
+  static const AppAccentColors light = AppAccentColors(
+    active: Color(0xFF3B82F6),
+    activeContainer: Color(0xFFDBEAFE),
+    completed: Color(0xFF16A34A),
+    completedContainer: Color(0xFFDCFCE7),
+    headerGradientStart: Color(0xFF6366F1),
+    headerGradientEnd: Color(0xFF8B5CF6),
+  );
+
+  static const AppAccentColors dark = AppAccentColors(
+    active: Color(0xFF60A5FA),
+    activeContainer: Color(0xFF1E3A5F),
+    completed: Color(0xFF4ADE80),
+    completedContainer: Color(0xFF14532D),
+    headerGradientStart: Color(0xFF4F46E5),
+    headerGradientEnd: Color(0xFF7C3AED),
+  );
+
+  @override
+  AppAccentColors copyWith({
+    Color? active,
+    Color? activeContainer,
+    Color? completed,
+    Color? completedContainer,
+    Color? headerGradientStart,
+    Color? headerGradientEnd,
+  }) {
+    return AppAccentColors(
+      active: active ?? this.active,
+      activeContainer: activeContainer ?? this.activeContainer,
+      completed: completed ?? this.completed,
+      completedContainer: completedContainer ?? this.completedContainer,
+      headerGradientStart: headerGradientStart ?? this.headerGradientStart,
+      headerGradientEnd: headerGradientEnd ?? this.headerGradientEnd,
+    );
+  }
+
+  @override
+  AppAccentColors lerp(ThemeExtension<AppAccentColors>? other, double t) {
+    if (other is! AppAccentColors) {
+      return this;
+    }
+
+    return AppAccentColors(
+      active: Color.lerp(active, other.active, t)!,
+      activeContainer: Color.lerp(activeContainer, other.activeContainer, t)!,
+      completed: Color.lerp(completed, other.completed, t)!,
+      completedContainer: Color.lerp(
+        completedContainer,
+        other.completedContainer,
+        t,
+      )!,
+      headerGradientStart: Color.lerp(
+        headerGradientStart,
+        other.headerGradientStart,
+        t,
+      )!,
+      headerGradientEnd: Color.lerp(
+        headerGradientEnd,
+        other.headerGradientEnd,
+        t,
+      )!,
+    );
+  }
+}
