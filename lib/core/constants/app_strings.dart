@@ -56,6 +56,11 @@ abstract final class AppStrings {
 
   // ── Actions & tooltips ──────────────────────────────────────────────────────
   static const String deleteTaskTooltip = 'Delete task';
+  static const String deleteTaskDialogTitle = 'Delete this task?';
+  static const String deleteTaskDialogBody =
+      'This will permanently remove the task below. This action cannot be undone.';
+  static const String cancel = 'Cancel';
+  static const String deleteConfirm = 'Delete';
 
   // ── Appearance / theme ────────────────────────────────────────────────────
   static const String appearance = 'Appearance';

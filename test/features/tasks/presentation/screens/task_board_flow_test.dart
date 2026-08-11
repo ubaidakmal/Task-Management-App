@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:task_management_app/core/constants/app_strings.dart';
 import 'package:task_management_app/features/tasks/domain/models/task.dart';
 import 'package:task_management_app/features/tasks/presentation/widgets/task_board_keys.dart';
 import '../../../../helpers/task_board_test_helpers.dart';
@@ -30,6 +31,32 @@ void main() {
       expect(find.text('Finish responsive UI'), findsOneWidget);
       expect(find.text('Step 3 complete'), findsOneWidget);
       expect(find.byKey(TaskBoardKeys.taskEmptyState), findsNothing);
+      expect(find.text('All'), findsWidgets);
+    });
+
+    testWidgets('switches filter from Completed to All after adding a task', (
+      tester,
+    ) async {
+      await tester.setSurfaceSizeAndPump(
+        const Size(390, 844),
+        buildTaskBoardTestApp(),
+      );
+
+      await tester.tap(find.text('Completed'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(TaskBoardKeys.addTaskFab));
+      await tester.pumpAndSettle();
+      await tester.enterText(
+        find.byType(TextFormField).first,
+        'Visible after add',
+      );
+      await tester.tap(find.byType(FilledButton));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Visible after add'), findsOneWidget);
+      expect(find.text('All'), findsWidgets);
+      expect(find.text('Completed'), findsWidgets);
     });
 
     testWidgets('switches Active and Completed filters', (tester) async {
@@ -67,9 +94,8 @@ void main() {
       await tester.tap(find.byType(Checkbox));
       await tester.pumpAndSettle();
 
-      final checkbox = tester.widget<Checkbox>(find.byType(Checkbox));
-      expect(checkbox.value, isTrue);
       expect(repository.tasks.single.isCompleted, isTrue);
+      expect(find.byIcon(Icons.check_rounded), findsOneWidget);
     });
 
     testWidgets('deletes a task from the UI', (tester) async {
@@ -83,8 +109,12 @@ void main() {
         buildTaskBoardTestApp(repository: repository),
       );
 
-      final deleteButtons = find.byIcon(Icons.delete_outline);
+      final deleteButtons = find.byIcon(Icons.delete_outline_rounded);
       await tester.tap(deleteButtons.first);
+      await tester.pumpAndSettle();
+
+      expect(find.text(AppStrings.deleteTaskDialogTitle), findsOneWidget);
+      await tester.tap(find.text(AppStrings.deleteConfirm));
       await tester.pumpAndSettle();
 
       expect(find.text('Delete me'), findsNothing);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:task_management_app/app/theme/app_colors.dart';
 import 'package:task_management_app/app/theme/app_theme_extensions.dart';
 import 'package:task_management_app/app/widgets/accent_header_band.dart';
 import 'package:task_management_app/app/widgets/brand_logo.dart';
@@ -56,6 +57,7 @@ class CompactTaskBoardLayout extends ConsumerWidget {
                       AppStrings.tagline,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w700,
+                        color: AppColors.lightSurface,
                       ),
                     ),
                     if (stats.total > 0) ...[

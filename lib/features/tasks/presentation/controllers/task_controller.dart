@@ -1,7 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task_management_app/core/constants/app_strings.dart';
 import 'package:task_management_app/features/tasks/domain/models/task.dart';
+import 'package:task_management_app/features/tasks/domain/models/task_filter.dart';
 import 'package:task_management_app/features/tasks/presentation/providers/task_dependencies.dart';
+import 'package:task_management_app/features/tasks/presentation/providers/task_filter_provider.dart';
 
 final taskControllerProvider =
     AsyncNotifierProvider<TaskController, List<Task>>(TaskController.new);
@@ -28,6 +30,15 @@ class TaskController extends AsyncNotifier<List<Task>> {
     final currentTasks = state.requireValue;
     await ref.read(taskRepositoryProvider).addTask(task);
     state = AsyncData([...currentTasks, task]);
+    _ensureNewTaskVisible();
+  }
+
+  /// New tasks are active — keep All or Active selected so they stay visible.
+  void _ensureNewTaskVisible() {
+    final filter = ref.read(taskFilterProvider);
+    if (filter == TaskFilter.completed) {
+      ref.read(taskFilterProvider.notifier).setFilter(TaskFilter.all);
+    }
   }
 
   Future<void> toggleTask(String taskId) async {
